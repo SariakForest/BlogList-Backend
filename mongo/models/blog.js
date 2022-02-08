@@ -11,7 +11,7 @@ const blogSchema = new mongoose.Shema({
      },
      url:{
          type:String,
-         minLength:[5,"You introduced an invalid link"]
+         minLength:[5,"Invalid link"]
      },
      likes: Number
 })
