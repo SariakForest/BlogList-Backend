@@ -1,6 +1,13 @@
 
-const Blog = require("./models/blog")
+const Item = require("./models/blog")
 
-exports.getBlogs = ()=>{
-    return Blog.find({}).then(blogs=>blogs)
+exports.getAll = ()=>{
+    return Item.find({}).then(result=>result)
+}
+
+exports.addItem =({title,author,url,likes})=>{
+    const newItem =new Item({
+        title,author,url,likes
+    })
+    return newItem.save().then(result=>result)
 }

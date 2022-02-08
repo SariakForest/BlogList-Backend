@@ -3,7 +3,7 @@ const {DB_URL}=require("./utils/config"),
     app = express(),
     apiRoutes = require("./routes/api/apiRoutes"),
     middleware = require("./utils/middleware"),
-    mongoose = require("mogoose")
+    mongoose = require("mongoose")
     lg = require("./utils/logger")
 
 mongoose.connect(DB_URL).then(()=>lg.info("Connected to MongoDB"))

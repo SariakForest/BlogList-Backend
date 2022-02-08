@@ -1,6 +1,6 @@
-const mongoose = requrie("mongoose")
+const mongoose = require("mongoose")
 
-const blogSchema = new mongoose.Shema({
+const blogSchema = new mongoose.Schema({
      title:{
          type:String,
          required:[true,"Title is required"]
