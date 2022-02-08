@@ -2,10 +2,10 @@ const info = (...params) => {
     console.log(...params)
   }
   
-  const error = (...params) => {
+  const err = (...params) => {
     console.error(...params)
   }
   
   module.exports = {
-    info, error
+    info, err
   }
