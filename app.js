@@ -1,7 +1,6 @@
 const {DB_URL}=require("./utils/config"),
     express = require("express"),
     app = express(),
-    cors = require("cors"),
     apiRoutes = require("./routes/api/apiRoutes"),
     middleware = require("./utils/middleware"),
     mongoose = require("mogoose")
