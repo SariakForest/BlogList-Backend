@@ -1,4 +1,4 @@
-
+const _ = require("lodash")
 exports.dummy = blogs=>{
     if(blogs) return 1
     return 0
@@ -18,5 +18,41 @@ exports.favBlog = blogs=>{
         likes:favBlog.likes
     }
     return favBlog
+}
+
+exports.mostBlogs =blogs=>{
+const authors = [
+    {
+      author: "Michael Chan",
+      blogs: 0,
+    },
+    {
+      author: "Edsger W. Dijkstra",
+      blogs: 0,
+    },
+    {
+      author: "Robert C. Martin",
+      blogs: 0,
+    },
+  ]
+const [michael, edsger, robert] = authors
+blogs.forEach(blog=>{
+    switch(blog.author){
+        case "Michael Chan":
+            michael.blogs++
+            break
+        case "Edsger W. Dijkstra":
+            edsger.blogs++
+            break
+        case "Robert C. Martin":
+            robert.blogs++
+            break
+    }
+})
+let maxBlogs = 0
+authors.forEach((el)=>{
+    if(el.blogs > maxBlogs) maxBlogs = el.blogs
+})
+return authors.find(el=>el.blogs===maxBlogs)
 }
 
