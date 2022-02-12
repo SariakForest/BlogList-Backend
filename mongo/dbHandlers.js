@@ -1,8 +1,8 @@
 
 const Item = require("./models/blog")
 
-exports.getAll = ()=>{
-    return Item.find({}).then(result=>result)
+exports.getAll = async()=>{
+    return await Item.find({})
 }
 
 exports.addItem =({title,author,url,likes})=>{
