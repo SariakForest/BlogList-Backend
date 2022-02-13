@@ -37,8 +37,13 @@ describe("Validation:",()=>{
                 .expect("Content-Type",/application\/json/)
        
         expect(response.body).toEqual({...response.body,likes:0})
-        
-
+    })
+    test("When new blog is added if title and url are missing, status 400",async()=>{
+        const {url, title, ...noUrlOrTitle} = helper.testBlog
+        await api.post("/api/blogs")
+                .send(noUrlOrTitle)
+                .expect(400)
+        expect(await helper.blogsInDB()).toHaveLength(helper.initialBlogs.length)
     })
 
 })
