@@ -16,6 +16,13 @@ describe("Request type",()=>{
     })
     
 })
+describe("Validation:",()=>{
+    test("Id property is send instead of _id", async()=>{
+        const response= await api.get("/api/blogs")
+        expect(response.body[0].id).toBeDefined()
+    })
+
+})
 beforeEach(helper.resetDB)
 afterAll(() => {
     mongoose.connection.close()
