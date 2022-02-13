@@ -5,9 +5,9 @@ exports.getAll = async()=>{
     return await Item.find({})
 }
 
-exports.addItem =({title,author,url,likes})=>{
+exports.addItem =async({title,author,url,likes})=>{
     const newItem =new Item({
         title,author,url,likes
     })
-    return newItem.save().then(result=>result)
+    return await newItem.save()
 }

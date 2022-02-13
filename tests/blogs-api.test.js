@@ -14,6 +14,14 @@ describe("Request type",()=>{
         
        expect(response.body).toHaveLength(helper.initialBlogs.length)
     })
+    test("post to '/api/blogs' saves the new blog", async()=>{
+        const response= await api.post("/api/blogs")
+                .send(helper.testBlog)
+                .expect(201)
+                .expect("Content-Type",/application\/json/)
+        expect(response.body.title).toBe(helper.testBlog.title)
+        expect(await helper.blogsInDB()).toHaveLength(helper.initialBlogs.length + 1)
+    })
     
 })
 describe("Validation:",()=>{

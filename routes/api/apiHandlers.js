@@ -12,8 +12,12 @@ exports.getBlogs =async(req,res,next)=>{
     
    
 
-exports.addBlog=(req,res,next)=>{
-    db.addItem(req.body).then(newBlog=>{
+exports.addBlog=async(req,res,next)=>{
+    try{
+        const newBlog = await db.addItem(req.body)
         res.status(201).json(newBlog)
-    }).catch(err=>next(err))
+    }catch(err){
+        next(err)
+    }
+  
 }
