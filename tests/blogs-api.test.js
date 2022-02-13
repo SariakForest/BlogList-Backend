@@ -29,6 +29,17 @@ describe("Validation:",()=>{
         const response= await api.get("/api/blogs")
         expect(response.body[0].id).toBeDefined()
     })
+    test("When new blog is added, likes, if missing, defaults to 0",async()=>{
+        const {likes,...noLikesBlog} = helper.testBlog
+        const response= await api.post("/api/blogs")
+                .send(noLikesBlog)
+                .expect(201)
+                .expect("Content-Type",/application\/json/)
+       
+        expect(response.body).toEqual({...response.body,likes:0})
+        
+
+    })
 
 })
 beforeEach(helper.resetDB)
