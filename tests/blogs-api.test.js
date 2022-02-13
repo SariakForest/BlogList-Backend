@@ -31,7 +31,17 @@ describe("Request type",()=>{
         const notesAtEnd = await helper.blogsInDB()
         expect(notesAtEnd).not.toContain(noteToDelete)
         expect(notesAtEnd).toHaveLength(helper.initialBlogs.length -1)
-       
+    })
+    test("put to '/api/blogs/:id' succesfully updates the entry", async()=>{
+        const {_id,...blogToUpdate} = {...helper.initialBlogs[0],likes:12}
+        const response= await api.put(`/api/blogs/${_id}`)
+                .send(blogToUpdate)
+                .expect(200)
+                .expect("Content-Type",/application\/json/)
+        const notesAtEnd = await helper.blogsInDB()
+        expect(notesAtEnd).toContainEqual(response.body)
+        expect(response.body.likes).toBe(blogToUpdate.likes)
+
     })
     
 })

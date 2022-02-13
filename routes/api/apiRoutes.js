@@ -5,5 +5,6 @@ apiRoutes.get("/",api.getBlogs)
 apiRoutes.post("/",api.addBlog)
 
 apiRoutes.delete("/:id",api.deleteBlog)
+apiRoutes.put("/:id",api.updateBlog)
 
 module.exports = apiRoutes

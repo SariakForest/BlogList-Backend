@@ -31,3 +31,14 @@ exports.deleteBlog=async(req,res,next)=>{
         next(err)
     }
 }
+
+exports.updateBlog=async(req,res,next)=>{
+    try{
+        const id = req.params.id
+        const updatedBlog = await db.updateItem(id,req.body)
+        if(!updatedBlog)res.status(404).json({err:"Could not find the entry in database"})
+        res.status(200).json(updatedBlog)
+    }catch(err){
+        next(err)
+    }
+}
