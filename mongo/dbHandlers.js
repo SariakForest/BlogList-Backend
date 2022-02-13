@@ -11,3 +11,7 @@ exports.addItem =async({title,author,url,likes})=>{
     })
     return await newItem.save()
 }
+
+exports.deleteItem = async(id)=>{
+   return await Item.findByIdAndDelete(id)
+}

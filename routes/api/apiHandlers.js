@@ -21,3 +21,13 @@ exports.addBlog=async(req,res,next)=>{
     }
   
 }
+
+exports.deleteBlog=async(req,res,next)=>{
+    try{
+        const id = req.params.id
+        const result =await db.deleteItem(id)
+        res.status(204).json(result)
+    }catch(err){
+        next(err)
+    }
+}
