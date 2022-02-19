@@ -12,7 +12,7 @@ mongoose.connect(DB_URL).then(()=>lg.info("Connected to MongoDB"))
 app.use(express.json())
 app.use(middleware.requestLogger)
 
-app.use("/api/blogs",apiRoutes)
+app.use("/api",apiRoutes)
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
