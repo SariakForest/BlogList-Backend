@@ -10,7 +10,11 @@ const userSchema = new mongoose.Schema({
         type:String,
         required:[true,"No name was given"]
     },
-    passwordHash:String
+    passwordHash:String,
+    blogs:[{
+      type:mongoose.Schema.Types.ObjectId,
+      ref:"Blog"
+    }]
 })
 
 userSchema.set('toJSON', {

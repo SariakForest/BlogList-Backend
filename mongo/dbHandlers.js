@@ -1,9 +1,23 @@
-
+const User = require("./models/user")
+const Blog = require("./models/blog")
 
 
 exports.getAll = async(collection)=>{
     const Item = require(`./models/${collection}`)
-    return await Item.find({})
+    let opts = {}
+    let toPopulate
+    switch(collection){
+        case "blog":
+            toPopulate = "user"
+            opts={username:1,name:1}
+            break
+        case "user":
+            toPopulate = "blogs"
+            opts={url:1,title:1,author:1}
+            break
+    }
+
+    return await Item.find({}).populate(toPopulate,opts)
 }
 
 exports.getSingle = async(id,collection)=>{
@@ -12,18 +26,26 @@ exports.getSingle = async(id,collection)=>{
 }
 
 exports.addBlog =async({title,author,url,likes})=>{
-    const Item = require("./models/blog")
-    const newItem =new Item({
-        title,author,url,likes
+    const userID = await randomUserId()
+    const newBlog =new Blog({
+        title,author,url,likes,
+        user:userID
     })
-    return await newItem.save()
+    
+    const savedBlog = await newBlog.save()
+    const user = await User.findOne({_id:userID})
+    console.log('user blogs', user.username)
+    user.blogs = user.blogs.concat(savedBlog._id.toString())
+    
+    await user.save()
+    return savedBlog
 }
 exports.addUser =async({username,name,passwordHash})=>{
-    const Item = require("./models/user")
-    const newItem =new Item({
+    
+    const newUser =new User({
         username,name,passwordHash
     })
-    return await newItem.save()
+    return await newUser.save()
 }
 
 exports.deleteItem = async(id,collection)=>{
@@ -46,5 +68,11 @@ exports.updateItem = async(id,itemToUpdate,collection)=>{
 exports.findOne = async(params,collection)=>{
     const Item = require(`./models/${collection}`)
     return await Item.findOne(params)
+}
+
+async function randomUserId(){
+    const users = await User.find({})
+    const randomUserId = users[Math.floor(Math.random() * users.length)]._id.toString()
+    return randomUserId
 }
 
