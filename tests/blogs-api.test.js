@@ -4,7 +4,6 @@ const helper = require("./api-test-helper")
 const app = require('../app')
 
 const api = supertest(app)
-jest.setTimeout(10000)
 describe("Request type",()=>{
    
     test("get to '/api/blogs' returns all well formatted", async()=>{
@@ -71,7 +70,7 @@ describe("Validation:",()=>{
 
 
 })
-beforeEach(helper.resetDB)
+beforeEach(()=>helper.resetDB("blog"))
 afterAll(() => {
     mongoose.connection.close()
   })

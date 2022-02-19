@@ -69,6 +69,10 @@ exports.addUser=async(req,res,next)=>{
     if(userExists){
         res.status(400).json({error:"Username already exists"})
     }
+    if(!password)res.status(400).json({error:"No password was given"})
+    if(password.length < 3){
+        res.status(400).json({error:"Password is too short"})
+    }
     
     const saltRounds = 10
     const passwordHash = await bcrypt.hash(password,saltRounds)
