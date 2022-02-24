@@ -39,6 +39,9 @@ exports.deleteBlog = async (req, res, next) => {
     const id = req.params.id
     const authUser = req.user
     const blog = await db.getSingle(id, "blog")
+    if(!blog){
+        res.status(404).json({error:"No entry with this id in server"})
+    }
     if (authUser._id.toString() === blog.user.toString()) {
       const result = await db.deleteItem(id, "blog")
       res.status(204).json(result)

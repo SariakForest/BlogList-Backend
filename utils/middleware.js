@@ -39,7 +39,8 @@ const tokenExtractor = (req,res,next) =>{
 }
 
 const userExtractor = async(req,res,next)=>{
-  const decodedToken = jwt.verify(req.token, process.env.SECRET)
+ try{ 
+   const decodedToken = jwt.verify(req.token, process.env.SECRET)
   console.log("decodedToken", decodedToken)
   
     if (!decodedToken.id) {
@@ -48,6 +49,8 @@ const userExtractor = async(req,res,next)=>{
     const user = await db.getSingle(decodedToken.id, "user")
     if(user){
       req.user = user
+    }}catch(err){
+      return res.status(401).json({ error: "token missing or invalid" })
     }
     next()
 }
