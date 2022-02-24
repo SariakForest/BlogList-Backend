@@ -37,15 +37,26 @@ exports.addBlog = async (req, res, next) => {
   }
 };
 
-exports.deleteBlog=async(req,res,next)=>{
-    try{
-        const id = req.params.id
-        const result =await db.deleteItem(id,"blog")
-        res.status(204).json(result)
-    }catch(err){
-        next(err)
+exports.deleteBlog = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const decodedToken = jwt.verify(req.token, process.env.SECRET);
+    if (!decodedToken.id) {
+      return res.status(401).json({ error: "token missing or invalid" });
     }
-}
+    const authUser = await db.getSingle(decodedToken.id, "user");
+    const blog = await db.getSingle(id, "blog");
+    console.log("User", authUser);
+    console.log("creator", blog.user);
+    if (authUser._id.toString() === blog.user.toString()) {
+      const result = await db.deleteItem(id, "blog");
+      res.status(204).json(result);
+    }
+    res.status(400).json({ error: "Only OP can delete his entry" });
+  } catch (err) {
+    next(err);
+  }
+};
 
 exports.updateBlog=async(req,res,next)=>{
     try{
