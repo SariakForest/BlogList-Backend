@@ -25,11 +25,8 @@ exports.getBlog=async(req,res,next)=>{
     
 exports.addBlog = async (req, res, next) => {
   try {
-    const decodedToken = jwt.verify(req.token, process.env.SECRET)
-    if (!decodedToken.id) {
-      return res.status(401).json({ error: "token missing or invalid" })
-    }
-    const user = await db.getSingle(decodedToken.id, "user")
+    const user = req.user
+    console.log("req user", user)
     const newBlog = await db.addBlog(req.body, user)
     res.status(201).json(newBlog)
   } catch (err) {
@@ -39,24 +36,18 @@ exports.addBlog = async (req, res, next) => {
 
 exports.deleteBlog = async (req, res, next) => {
   try {
-    const id = req.params.id;
-    const decodedToken = jwt.verify(req.token, process.env.SECRET);
-    if (!decodedToken.id) {
-      return res.status(401).json({ error: "token missing or invalid" });
-    }
-    const authUser = await db.getSingle(decodedToken.id, "user");
-    const blog = await db.getSingle(id, "blog");
-    console.log("User", authUser);
-    console.log("creator", blog.user);
+    const id = req.params.id
+    const authUser = req.user
+    const blog = await db.getSingle(id, "blog")
     if (authUser._id.toString() === blog.user.toString()) {
-      const result = await db.deleteItem(id, "blog");
-      res.status(204).json(result);
+      const result = await db.deleteItem(id, "blog")
+      res.status(204).json(result)
     }
-    res.status(400).json({ error: "Only OP can delete his entry" });
+    res.status(400).json({ error: "Only OP can delete his entry" })
   } catch (err) {
-    next(err);
+    next(err)
   }
-};
+}
 
 exports.updateBlog=async(req,res,next)=>{
     try{

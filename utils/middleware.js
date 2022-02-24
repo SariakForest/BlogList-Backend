@@ -1,6 +1,6 @@
 const logger = require("./logger")
 const jwt = require("jsonwebtoken")
-const res = require("express/lib/response")
+const db = require("../mongo/dbHandlers")
 
 const requestLogger = (request, response, next) => {
   logger.info("Method:", request.method)
@@ -30,7 +30,6 @@ const errorHandler = (error, request, response, next) => {
 
 const tokenExtractor = (req,res,next) =>{
   const authorization = req.get("authorization")
-  console.log("Authorization:", authorization)
   if (authorization && authorization.toLowerCase().startsWith("bearer ")) {
     req.token = authorization.substring(7)
   }else{
@@ -39,9 +38,24 @@ const tokenExtractor = (req,res,next) =>{
   next()
 }
 
+const userExtractor = async(req,res,next)=>{
+  const decodedToken = jwt.verify(req.token, process.env.SECRET)
+  console.log("decodedToken", decodedToken)
+  
+    if (!decodedToken.id) {
+      return res.status(401).json({ error: "token missing or invalid" })
+    }
+    const user = await db.getSingle(decodedToken.id, "user")
+    if(user){
+      req.user = user
+    }
+    next()
+}
+
 module.exports = {
   requestLogger,
   unknownEndpoint,
   errorHandler,
-  tokenExtractor
+  tokenExtractor,
+  userExtractor
 }
