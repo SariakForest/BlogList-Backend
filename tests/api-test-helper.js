@@ -14,7 +14,7 @@ const blogsInDB = async () => {
   const blogs = await Blog.find({})
   return blogs.map((blog) => blog.toJSON())
 }
-const usersInDb = async () => {
+const usersInDB = async () => {
   const users = await User.find({})
   return users.map(user => user.toJSON())
 }
@@ -36,4 +36,4 @@ const resetDB = async (collection) => {
   await Promise.all(promiseArray);
 };
 
-module.exports = { initialBlogs, initialUsers,testBlog, blogsInDB,usersInDb,resetDB };
+module.exports = { initialBlogs, initialUsers,testBlog, blogsInDB,usersInDB,resetDB };

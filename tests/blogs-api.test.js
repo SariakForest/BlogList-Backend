@@ -14,8 +14,19 @@ describe("Request type",()=>{
        expect(response.body).toHaveLength(helper.initialBlogs.length)
     })
     test("post to '/api/blogs' saves the new blog", async()=>{
+        await helper.resetDB("user")
+        const logInUser = {
+            username:"Test",
+            password:"user1"
+        }
+        const logInRes = await api.post("/api/login")
+                .send(logInUser)
+                .expect(200)
+        console.log(logInRes.body)
+        const token = `Bearer ${logInRes.body.token}`
         const response= await api.post("/api/blogs")
                 .send(helper.testBlog)
+                .set({Authorization: token})
                 .expect(201)
                 .expect("Content-Type",/application\/json/)
         expect(response.body.title).toBe(helper.testBlog.title)

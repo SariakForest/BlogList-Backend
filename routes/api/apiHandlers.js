@@ -104,8 +104,10 @@ exports.addUser=async(req,res,next)=>{
 exports.logUser = async (req, res, next) => {
   try {
     const { username, password } = req.body;
+    console.log('req.body', req.body)
 
     const user = await db.findOne({ username },"user");
+    console.log('user', user)
     const passwordCorrect =
       user === null ? false : await bcrypt.compare(password, user.passwordHash);
 

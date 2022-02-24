@@ -14,7 +14,7 @@ describe("Adding invalid user with", () => {
         .post("/api/users")
         .send(noUsernameUser)
         .expect(400);
-      const usersAtEnd = await helper.usersInDb();
+      const usersAtEnd = await helper.usersInDB();
       expect(result.body).toEqual({
         error: "User validation failed: username: No username was given",
       });
@@ -31,7 +31,7 @@ describe("Adding invalid user with", () => {
         .post("/api/users")
         .send(shortUsernameUser)
         .expect(400);
-      const usersAtEnd = await helper.usersInDb();
+      const usersAtEnd = await helper.usersInDB();
       expect(result.body).toEqual({
         error: "User validation failed: username: Username must be longer",
       });
@@ -45,7 +45,7 @@ describe("Adding invalid user with", () => {
         .post("/api/users")
         .send(noPasswordUser)
         .expect(400);
-      const usersAtEnd = await helper.usersInDb();
+      const usersAtEnd = await helper.usersInDB();
       expect(result.body).toEqual({ error: "No password was given" });
       expect(usersAtEnd).toHaveLength(helper.initialUsers.length);
     });
@@ -59,7 +59,7 @@ describe("Adding invalid user with", () => {
         .post("/api/users")
         .send(ShortPasswordUser)
         .expect(400);
-      const usersAtEnd = await helper.usersInDb();
+      const usersAtEnd = await helper.usersInDB();
       expect(result.body).toEqual({ error: "Password is too short" });
       expect(usersAtEnd).toHaveLength(helper.initialUsers.length);
     });
