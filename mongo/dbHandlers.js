@@ -25,15 +25,14 @@ exports.getSingle = async(id,collection)=>{
     return await Item.findById(id)
 }
 
-exports.addBlog =async({title,author,url,likes})=>{
-    const userID = await randomUserId()
+exports.addBlog =async({title,author,url,likes},user)=>{
+    const userID = user.id
     const newBlog =new Blog({
         title,author,url,likes,
         user:userID
     })
     
     const savedBlog = await newBlog.save()
-    const user = await User.findOne({_id:userID})
     user.blogs = user.blogs.concat(savedBlog._id.toString())
     
     await user.save()

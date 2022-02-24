@@ -23,15 +23,19 @@ exports.getBlog=async(req,res,next)=>{
     }
 }
     
-exports.addBlog=async(req,res,next)=>{
-    try{
-        const newBlog = await db.addBlog(req.body)
-        res.status(201).json(newBlog)
-    }catch(err){
-        next(err)
+exports.addBlog = async (req, res, next) => {
+  try {
+    const decodedToken = jwt.verify(req.token, process.env.SECRET)
+    if (!decodedToken.id) {
+      return res.status(401).json({ error: "token missing or invalid" })
     }
-  
-}
+    const user = await db.getSingle(decodedToken.id, "user")
+    const newBlog = await db.addBlog(req.body, user)
+    res.status(201).json(newBlog)
+  } catch (err) {
+    next(err)
+  }
+};
 
 exports.deleteBlog=async(req,res,next)=>{
     try{
@@ -112,6 +116,7 @@ exports.logUser = async (req, res, next) => {
     };
 
     const token = jwt.sign(tokenUser, process.env.SECRET);
+    
     res.status(200).send({ token, username: user.username, name: user.name });
   } catch (err) {
     next(err);

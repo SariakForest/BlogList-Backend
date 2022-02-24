@@ -11,6 +11,7 @@ mongoose.connect(DB_URL).then(()=>lg.info("Connected to MongoDB"))
 
 app.use(express.json())
 app.use(middleware.requestLogger)
+app.use(middleware.tokenExtractor)
 
 app.use("/api",apiRoutes)
 
