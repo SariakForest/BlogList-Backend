@@ -26,7 +26,6 @@ exports.getBlog=async(req,res,next)=>{
 exports.addBlog = async (req, res, next) => {
   try {
     const user = req.user
-    console.log("req user", user)
     const newBlog = await db.addBlog(req.body, user)
     res.status(201).json(newBlog)
   } catch (err) {
@@ -103,29 +102,26 @@ exports.addUser=async(req,res,next)=>{
 
 exports.logUser = async (req, res, next) => {
   try {
-    const { username, password } = req.body;
-    console.log('req.body', req.body)
-
-    const user = await db.findOne({ username },"user");
-    console.log('user', user)
+    const { username, password } = req.body
+    const user = await db.findOne({ username }, "user")
     const passwordCorrect =
-      user === null ? false : await bcrypt.compare(password, user.passwordHash);
+      user === null ? false : await bcrypt.compare(password, user.passwordHash)
 
     if (!(user && passwordCorrect)) {
       return res.status(401).json({
         error: "Invalid password or username",
-      });
+      })
     }
 
     const tokenUser = {
       username: user.username,
       id: user._id,
-    };
+    }
 
-    const token = jwt.sign(tokenUser, process.env.SECRET);
-    
-    res.status(200).send({ token, username: user.username, name: user.name });
+    const token = jwt.sign(tokenUser, process.env.SECRET)
+
+    res.status(200).send({ token, username: user.username, name: user.name })
   } catch (err) {
-    next(err);
+    next(err)
   }
-};
+}

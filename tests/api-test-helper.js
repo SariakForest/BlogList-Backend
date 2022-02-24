@@ -29,11 +29,30 @@ const resetDB = async (collection) => {
       initials = initialUsers
       break
   }
-  await Item.deleteMany({});
+  await Item.deleteMany({})
 
-  const ItemObjects = initials.map((item) => new Item(item));
-  const promiseArray = ItemObjects.map((item) => item.save());
-  await Promise.all(promiseArray);
-};
+  const ItemObjects = initials.map((item) => new Item(item))
+  const promiseArray = ItemObjects.map((item) => item.save())
+  await Promise.all(promiseArray)
+}
 
-module.exports = { initialBlogs, initialUsers,testBlog, blogsInDB,usersInDB,resetDB };
+const testUserToken = async(api)=>{
+  await resetDB("user")
+  const logInUser = {
+      username:"Test",
+      password:"user1"
+  }
+  const logInRes = await api.post("/api/login")
+          .send(logInUser)
+          .expect(200)
+  const token = `Bearer ${logInRes.body.token}`
+  return token
+}
+
+module.exports = { initialBlogs,
+  initialUsers,
+  testBlog,
+  blogsInDB,
+  usersInDB,
+  resetDB,
+  testUserToken }

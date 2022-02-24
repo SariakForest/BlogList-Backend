@@ -10,3 +10,4 @@ module.exports = [
         passwordHash:"$2b$10$M08LTWJPu816rc52IBlleOB5A1RxsoYDTnb8twqONsf7aO0rfnb5e"
     }
 ]
+
