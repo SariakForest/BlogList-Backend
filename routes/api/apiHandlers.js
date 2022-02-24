@@ -1,8 +1,9 @@
 const db = require("../../mongo/dbHandlers")
 const bcrypt = require('bcrypt')
+const jwt = require("jsonwebtoken")
 const lg = require("../../utils/logger")
 
-// %%%%%% BLOGS %%%%%%%
+// --------------------%%%%%% BLOGS %%%%%%%---------------------------
 
 exports.getBlogs =async(req,res,next)=>{
     try{
@@ -53,7 +54,11 @@ exports.updateBlog=async(req,res,next)=>{
     }
 }
 
-// %%%%%% USERS %%%%%%%
+
+
+
+// --------------------%%%%%% USERS %%%%%%%---------------------------
+
 exports.getUsers = async(req,res,next)=>{
     try{
         const users = await db.getAll("user")
@@ -82,3 +87,33 @@ exports.addUser=async(req,res,next)=>{
         next(err)
     }
 }
+
+
+
+// --------------------%%%%%% LOGIN %%%%%%%---------------------------
+
+exports.logUser = async (req, res, next) => {
+  try {
+    const { username, password } = req.body;
+
+    const user = await db.findOne({ username },"user");
+    const passwordCorrect =
+      user === null ? false : await bcrypt.compare(password, user.passwordHash);
+
+    if (!(user && passwordCorrect)) {
+      return res.status(401).json({
+        error: "Invalid password or username",
+      });
+    }
+
+    const tokenUser = {
+      username: user.username,
+      id: user._id,
+    };
+
+    const token = jwt.sign(tokenUser, process.env.SECRET);
+    res.status(200).send({ token, username: user.username, name: user.name });
+  } catch (err) {
+    next(err);
+  }
+};

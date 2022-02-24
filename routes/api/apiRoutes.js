@@ -14,4 +14,7 @@ apiRoutes.put("/blogs/:id",api.updateBlog)
 apiRoutes.get("/users",api.getUsers)
 apiRoutes.post("/users",api.addUser)
 
+// %%%%%% LOGIN %%%%%%%
+apiRoutes.post("/login",api.logUser)
+
 module.exports = apiRoutes

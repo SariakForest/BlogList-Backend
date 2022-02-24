@@ -34,7 +34,6 @@ exports.addBlog =async({title,author,url,likes})=>{
     
     const savedBlog = await newBlog.save()
     const user = await User.findOne({_id:userID})
-    console.log('user blogs', user.username)
     user.blogs = user.blogs.concat(savedBlog._id.toString())
     
     await user.save()
