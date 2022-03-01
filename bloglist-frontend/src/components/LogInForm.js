@@ -1,6 +1,36 @@
-import React from "react"
-const LogInForm = ({username,password,onSubmit,onChange})=>(
-    <form onSubmit={onSubmit}>
+import React, {useState} from "react"
+const LogInForm = ({logIn})=>{
+//Login form states
+const [username, setUsername] = useState("")
+const [password, setPassword] = useState("")
+///Event handlers
+const onChange = ({target}) => {
+  switch(target.name){
+    case "username":
+      setUsername(target.value)
+      break
+    case "password":
+      setPassword(target.value)
+      break
+    default: return
+  } 
+}
+
+const handleLogIn = (e)=>{
+  e.preventDefault()
+  const user = {username,password}
+  logIn(user)
+  resetInputs()
+}
+
+////Helper funcs
+function resetInputs(){
+    setUsername("")
+    setPassword("")
+}
+    
+    return (
+    <form onSubmit={handleLogIn}>
     <div>
       username: 
         <input
@@ -20,8 +50,8 @@ const LogInForm = ({username,password,onSubmit,onChange})=>(
       />
     </div>
     <button type="submit">login</button>
-  </form>
-)
+  </form>)
+}
 
 export default LogInForm
 

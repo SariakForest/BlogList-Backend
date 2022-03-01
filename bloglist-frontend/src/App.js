@@ -15,13 +15,11 @@ import Togglable from "./components/Togglable"
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
+  const [user, setUser] = useState(null)
   //Notification States
   const [notMsg, setNotMsg] = useState(null)
   const [isErr, setIsErr] = useState(false)
-  //Login form states
-  const [username, setUsername] = useState("")
-  const [password, setPassword] = useState("")
-  const [user, setUser] = useState(null)
+  
   
   const blogFormRef = useRef()
 
@@ -41,33 +39,20 @@ const App = () => {
     }
   },[])
   ///EVENT HANDLERS
-  const onChange = e => {
-    switch(e.target.getAttribute("name")){
-      case "username":
-        setUsername(e.target.value)
-        break
-      case "password":
-        setPassword(e.target.value)
-        break
-      default: return
-     
-    }
-      
-  }
-  const logInHandler = async e => {
-    e.preventDefault()
+
+  const logIn = async userforLogIn => {
+    
     try {
-      const user = await loginService.login({ username, password })
+      const user = await loginService.login(userforLogIn)
       window.localStorage.setItem("blogListUser",JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
-      resetInputs("login")
       notify(false,`${user.username} succesfully logged in`)
     } catch (err) {
       notify(true,"Invalid username or password")
     }
   }
-  const logOutHandler = e =>{
+  const logOut = e =>{
     window.localStorage.removeItem("blogListUser")
     notify(false,`Goodbye, ${user.username}!`)
     setUser(null)
@@ -78,7 +63,6 @@ const App = () => {
       const addedBlog = await blogService.addBlog(newBlog)
       setBlogs(blogs.concat(addedBlog))
       notify(false,`"${addedBlog.title.substring(0,30)}..." succesfully added`)
-      resetInputs("newBlog")
       blogFormRef.current.toggleVisibility()
     }catch(err){
       const errStatus = err.message.slice(-3)
@@ -91,16 +75,11 @@ const App = () => {
 
   ///HTML GENERATORS
   const logInForm = () => (
-    <LogInForm
-      username={username}
-      password={password}
-      onSubmit={logInHandler}
-      onChange={onChange}
-    ></LogInForm>
+    <LogInForm logIn={logIn}></LogInForm>
   )
   const blogList = () => (
     <>
-      {user.username} logged in <Button onClick={logOutHandler} text="logout"></Button>
+      {user.username} logged in <Button onClick={logOut} text="logout"></Button>
       <br></br>
       <Togglable btnLabel="New blog" ref={blogFormRef}>
         <NewBlogForm createBlog={createBlog} ></NewBlogForm>
@@ -119,13 +98,7 @@ const App = () => {
     setNotMsg(msg)
     resetNot()
   }
-  function resetInputs(wichInputs){
-    if(wichInputs==="login"){
-      setUsername("")
-      setPassword("")
-    }
 
-  }
 
 
   ///%%%%%%%%%%%%%%%%RETURN JSX%%%%%%%%%%%%%%%%%%%%%
