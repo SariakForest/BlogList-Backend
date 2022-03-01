@@ -1,4 +1,5 @@
 import React, {useState} from "react"
+import PropTypes from "prop-types"
 const LogInForm = ({logIn})=>{
 //Login form states
 const [username, setUsername] = useState("")
@@ -51,6 +52,10 @@ function resetInputs(){
     </div>
     <button type="submit">login</button>
   </form>)
+}
+
+LogInForm.propTypes ={
+  logIn:PropTypes.func.isRequired
 }
 
 export default LogInForm
