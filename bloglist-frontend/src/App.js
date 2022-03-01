@@ -72,6 +72,24 @@ const App = () => {
     }
   }
 
+  const updateBlog = async(blogToUpdate)=>{
+    try{
+      const updatedBlog = await blogService.updateBlog(blogToUpdate)
+      setBlogs(blogs.map(blog =>{
+        if(blog.id === updatedBlog.id){
+          return updatedBlog
+        }
+        return blog
+      }))
+      notify(false,`"${updatedBlog.title}" updated`)
+    }catch(err){
+      notify(true,err.message)
+    }
+    
+  }
+
+
+
 
   ///HTML GENERATORS
   const logInForm = () => (
@@ -85,7 +103,7 @@ const App = () => {
         <NewBlogForm createBlog={createBlog} ></NewBlogForm>
       </Togglable>
       <hr></hr>
-      <Blogs blogs={blogs}></Blogs>
+      <Blogs blogs={blogs} updateBlog={updateBlog}></Blogs>
     </>
   )
 
