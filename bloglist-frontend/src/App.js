@@ -60,7 +60,8 @@ const App = () => {
 
     try{
       const addedBlog = await blogService.addBlog(newBlog)
-      setBlogs(blogs.concat(addedBlog))
+      const finalBlogs = await blogService.getAll()
+      setBlogs(finalBlogs)
       notify(false,`"${addedBlog.title.substring(0,30)}..." succesfully added`)
       blogFormRef.current.toggleVisibility()
     }catch(err){
@@ -74,27 +75,32 @@ const App = () => {
   const updateBlog = async(blogToUpdate)=>{
     try{
       const updatedBlog = await blogService.updateBlog(blogToUpdate)
-      setBlogs(blogs.map(blog =>{
-        if(blog.id === updatedBlog.id){
-          return updatedBlog
-        }
-        return blog
-      }))
+      const finalBlogs = await blogService.getAll()
+      setBlogs(finalBlogs)
       notify(false,`"${updatedBlog.title}" updated`)
     }catch(err){
       notify(true,err.message)
     }
-    
   }
 
-
-
+  const deleteBlog = async(id)=>{
+    try{
+      const res = await blogService.deleteBlog(id)
+      const updatedBlogs = await blogService.getAll()
+      setBlogs(updatedBlogs)
+    }catch(err){
+      console.error(err.message)
+      notify(true,err.message)
+    }
+  }
 
   ///HTML GENERATORS
   const logInForm = () => (
     <LogInForm logIn={logIn}></LogInForm>
   )
-  const blogList = () => (
+  const blogList = () => {
+    const blogProps = {user,updateBlog,deleteBlog}
+    return(
     <>
       {user.username} logged in <Button onClick={logOut} text="logout"></Button>
       <br></br>
@@ -102,9 +108,9 @@ const App = () => {
         <NewBlogForm createBlog={createBlog} ></NewBlogForm>
       </Togglable>
       <hr></hr>
-      <Blogs blogs={blogs} updateBlog={updateBlog}></Blogs>
+      <Blogs blogs={blogs} blogProps={blogProps}></Blogs>
     </>
-  )
+  )}
 
   //Helpers
   function resetNot(){

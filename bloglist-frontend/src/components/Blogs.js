@@ -1,7 +1,7 @@
 import {useState} from "react"
 import Blog from "./Blog"
 import Button from "./Button"
-const Blogs = ({blogs,updateBlog})=>{
+const Blogs = ({blogs,blogProps})=>{
     const [toSort,setToSort] = useState(false)
     const sortedBlogs = [...blogs]
     sortedBlogs.sort((first,second)=>{
@@ -20,7 +20,7 @@ const Blogs = ({blogs,updateBlog})=>{
         <div>
             <Button onClick={toggleSort} text={toSort?"Sort chronologically":"Sort by likes"}/>
             {blogsToDisplay.map(blog => (
-                <Blog updateBlog={updateBlog}key={blog.id} blog={blog} />
+                <Blog blogProps={blogProps} key={blog.id} blog={blog} />
               ))}
         </div>
     )

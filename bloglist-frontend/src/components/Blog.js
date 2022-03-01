@@ -1,9 +1,10 @@
 import { useState } from "react"
 
 import Button from "./Button"
-const Blog = ({ blog, updateBlog }) => {
+const Blog = ({ blog, blogProps }) => {
   const [showInfo, setShowInfo] = useState(false)
-
+  const {user,updateBlog,deleteBlog} = blogProps
+  
   const expandBlog = () => setShowInfo(!showInfo)
   const addLike = ()=>{
     const changedBlog = {
@@ -13,7 +14,11 @@ const Blog = ({ blog, updateBlog }) => {
     }
     updateBlog(changedBlog)
   }
-  
+  const delBlog = (e)=>{
+    if(window.confirm(`Remove "${blog.title}"?`))
+    deleteBlog(blog.id)
+  }
+ 
   const infoStyle = {
     padding:20,
     width:"fit-content"
@@ -25,6 +30,9 @@ const Blog = ({ blog, updateBlog }) => {
       <p><a href={blog.url}>Link to blog</a><br></br></p>
       <p>likes {blog.likes} <Button onClick={addLike} text="👍" /></p>
       <p>{blog.author}</p>
+      {user.username === blog.user.username?
+      <Button onClick={delBlog} text="Remove" type="del"/>
+      :""}
       <hr></hr>
     </div>
   )
