@@ -20,7 +20,6 @@ const App = () => {
   const [notMsg, setNotMsg] = useState(null)
   const [isErr, setIsErr] = useState(false)
   
-  
   const blogFormRef = useRef()
 
   useEffect(() => {
