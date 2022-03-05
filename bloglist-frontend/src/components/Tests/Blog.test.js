@@ -50,5 +50,17 @@ describe("Blog components renders and", () => {
     expect(likes).not.toBeNull()
     expect(author).not.toBeNull()
   })
+  test("if like button is pressed twice, handler is called accordingly", () => {
+    const mockHandler = jest.fn()
+    blogProps.updateBlog = mockHandler
+    const { container } = render(<Blog blog={blog} blogProps={blogProps} />)
+    const btn = screen.getByText("show")
+    userEvent.click(btn)
+    const likesBtn = container.querySelector(".blog__likes button")
+    screen.debug(likesBtn)
+    userEvent.click(likesBtn)
+    userEvent.click(likesBtn)
+    expect(mockHandler.mock.calls).toHaveLength(2)
+  })
   beforeEach(() => cleanup())
 })
