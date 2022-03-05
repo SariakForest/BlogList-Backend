@@ -19,7 +19,7 @@ const App = () => {
   //Notification States
   const [notMsg, setNotMsg] = useState(null)
   const [isErr, setIsErr] = useState(false)
-  
+
   const blogFormRef = useRef()
 
   useEffect(() => {
@@ -29,100 +29,99 @@ const App = () => {
     }
     fetch()
   }, [])
-  useEffect(()=>{
+  useEffect(() => {
     const blogListUser = window.localStorage.getItem("blogListUser")
-    if(blogListUser){
+    if (blogListUser) {
       const user = JSON.parse(blogListUser)
       setUser(user)
       blogService.setToken(user.token)
     }
-  },[])
+  }, [])
   ///EVENT HANDLERS
 
   const logIn = async userforLogIn => {
-    
     try {
       const user = await loginService.login(userforLogIn)
-      window.localStorage.setItem("blogListUser",JSON.stringify(user))
+      window.localStorage.setItem("blogListUser", JSON.stringify(user))
       blogService.setToken(user.token)
       setUser(user)
-      notify(false,`${user.username} succesfully logged in`)
+      notify(false, `${user.username} succesfully logged in`)
     } catch (err) {
-      notify(true,"Invalid username or password")
+      notify(true, "Invalid username or password")
     }
   }
-  const logOut = e =>{
+  const logOut = () => {
     window.localStorage.removeItem("blogListUser")
-    notify(false,`Goodbye, ${user.username}!`)
+    notify(false, `Goodbye, ${user.username}!`)
     setUser(null)
   }
-  const createBlog = async (newBlog) =>{
-
-    try{
+  const createBlog = async newBlog => {
+    try {
       const addedBlog = await blogService.addBlog(newBlog)
       const finalBlogs = await blogService.getAll()
       setBlogs(finalBlogs)
-      notify(false,`"${addedBlog.title.substring(0,30)}..." succesfully added`)
+      notify(
+        false,
+        `"${addedBlog.title.substring(0, 30)}..." succesfully added`
+      )
       blogFormRef.current.toggleVisibility()
-    }catch(err){
+    } catch (err) {
       const errStatus = err.message.slice(-3)
-      errStatus==="400"
-      ?notify(true,"Invalid url, title or author are missing")
-      :notify(true,"Oops! Something went wrong")
+      errStatus === "400"
+        ? notify(true, "Invalid url, title or author is missing")
+        : notify(true, "Oops! Something went wrong")
     }
   }
 
-  const updateBlog = async(blogToUpdate)=>{
-    try{
+  const updateBlog = async blogToUpdate => {
+    try {
       const updatedBlog = await blogService.updateBlog(blogToUpdate)
       const finalBlogs = await blogService.getAll()
       setBlogs(finalBlogs)
-      notify(false,`"${updatedBlog.title}" updated`)
-    }catch(err){
-      notify(true,err.message)
+      notify(false, `"${updatedBlog.title}" updated`)
+    } catch (err) {
+      notify(true, err.message)
     }
   }
 
-  const deleteBlog = async(id)=>{
-    try{
-      const res = await blogService.deleteBlog(id)
+  const deleteBlog = async id => {
+    try {
+      await blogService.deleteBlog(id)
       const updatedBlogs = await blogService.getAll()
       setBlogs(updatedBlogs)
-    }catch(err){
+    } catch (err) {
       console.error(err.message)
-      notify(true,err.message)
+      notify(true, err.message)
     }
   }
 
   ///HTML GENERATORS
-  const logInForm = () => (
-    <LogInForm logIn={logIn}></LogInForm>
-  )
+  const logInForm = () => <LogInForm logIn={logIn}></LogInForm>
   const blogList = () => {
-    const blogProps = {user,updateBlog,deleteBlog}
-    return(
-    <>
-      {user.username} logged in <Button onClick={logOut} text="logout"></Button>
-      <br></br>
-      <Togglable btnLabel="New blog" ref={blogFormRef}>
-        <NewBlogForm createBlog={createBlog} ></NewBlogForm>
-      </Togglable>
-      <hr></hr>
-      <Blogs blogs={blogs} blogProps={blogProps}></Blogs>
-    </>
-  )}
+    const blogProps = { user, updateBlog, deleteBlog }
+    return (
+      <>
+        {user.username} logged in{" "}
+        <Button onClick={logOut} text="logout"></Button>
+        <br></br>
+        <Togglable btnLabel="New blog" ref={blogFormRef}>
+          <NewBlogForm createBlog={createBlog}></NewBlogForm>
+        </Togglable>
+        <hr></hr>
+        <Blogs blogs={blogs} blogProps={blogProps}></Blogs>
+      </>
+    )
+  }
 
   //Helpers
-  function resetNot(){
-    setTimeout(()=>setNotMsg(null),5000)
+  function resetNot() {
+    setTimeout(() => setNotMsg(null), 5000)
   }
-  function notify(isErr,msg){
+  function notify(isErr, msg) {
     setIsErr(isErr)
     setNotMsg(msg)
     resetNot()
   }
-
-
 
   ///%%%%%%%%%%%%%%%%RETURN JSX%%%%%%%%%%%%%%%%%%%%%
   return (

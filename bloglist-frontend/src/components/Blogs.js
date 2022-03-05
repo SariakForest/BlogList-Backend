@@ -1,28 +1,29 @@
-import {useState} from "react"
+import { useState } from "react"
 import Blog from "./Blog"
 import Button from "./Button"
-const Blogs = ({blogs,blogProps})=>{
-    const [toSort,setToSort] = useState(false)
-    const sortedBlogs = [...blogs]
-    sortedBlogs.sort((first,second)=>{
-        return second.likes-first.likes
-      })
-    
-    const toggleSort = (e)=>{
-        setToSort(!toSort)
-    }
-    let blogsToDisplay
+const Blogs = ({ blogs, blogProps }) => {
+  const [toSort, setToSort] = useState(false)
+  const sortedBlogs = [...blogs]
+  sortedBlogs.sort((first, second) => {
+    return second.likes - first.likes
+  })
 
-    toSort
-    ?blogsToDisplay = sortedBlogs
-    :blogsToDisplay = blogs
-    return(
-        <div>
-            <Button onClick={toggleSort} text={toSort?"Sort chronologically":"Sort by likes"}/>
-            {blogsToDisplay.map(blog => (
-                <Blog blogProps={blogProps} key={blog.id} blog={blog} />
-              ))}
-        </div>
-    )
+  const toggleSort = () => {
+    setToSort(!toSort)
+  }
+  let blogsToDisplay
+
+  toSort ? (blogsToDisplay = sortedBlogs) : (blogsToDisplay = blogs)
+  return (
+    <div>
+      <Button
+        onClick={toggleSort}
+        text={toSort ? "Sort chronologically" : "Sort by likes"}
+      />
+      {blogsToDisplay.map(blog => (
+        <Blog blogProps={blogProps} key={blog.id} blog={blog} />
+      ))}
+    </div>
+  )
 }
 export default Blogs
