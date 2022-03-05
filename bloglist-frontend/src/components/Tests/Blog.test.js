@@ -62,5 +62,6 @@ describe("Blog components renders and", () => {
     userEvent.click(likesBtn)
     expect(mockHandler.mock.calls).toHaveLength(2)
   })
-  beforeEach(() => cleanup())
 })
+
+beforeEach(() => cleanup())
