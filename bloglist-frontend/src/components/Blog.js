@@ -4,7 +4,6 @@ import Button from "./Button"
 const Blog = ({ blog, blogProps }) => {
   const [showInfo, setShowInfo] = useState(false)
   const { user, updateBlog, deleteBlog } = blogProps
-  console.log("blogProps: ", blogProps)
   const expandBlog = () => setShowInfo(!showInfo)
   const addLike = () => {
     const changedBlog = {
