@@ -4,7 +4,7 @@ import Button from "./Button"
 const Blog = ({ blog, blogProps }) => {
   const [showInfo, setShowInfo] = useState(false)
   const { user, updateBlog, deleteBlog } = blogProps
-
+  console.log("blogProps: ", blogProps)
   const expandBlog = () => setShowInfo(!showInfo)
   const addLike = () => {
     const changedBlog = {
@@ -26,14 +26,14 @@ const Blog = ({ blog, blogProps }) => {
   const blogInfo = (
     <div style={infoStyle}>
       <hr></hr>
-      <p>
+      <p className="blog__link">
         <a href={blog.url}>Link to blog</a>
         <br></br>
       </p>
-      <p>
+      <p className="blog__likes">
         likes {blog.likes} <Button onClick={addLike} text="👍" />
       </p>
-      <p>{blog.author}</p>
+      <p className="blog__author">{blog.author}</p>
       {user.username === blog.user.username ? (
         <Button onClick={delBlog} text="Remove" type="del" />
       ) : (
