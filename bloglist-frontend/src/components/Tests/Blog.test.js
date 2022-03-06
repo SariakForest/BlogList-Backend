@@ -27,6 +27,7 @@ const blogProps = {
   deleteBlog: () => jest.fn(),
 }
 
+
 describe("Blog components renders and", () => {
   test("displays title", () => {
     render(<Blog blog={blog} blogProps={blogProps} />)
